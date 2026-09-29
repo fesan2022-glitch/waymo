@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WaymoTaxi - Interface</title>
+    <style>
+        :root {
+            --primary-color: #00b050;
+            --background-color: #f7f9fa;
+            --text-color: #333;
+            --card-bg: #ffffff;
+            --border-radius: 16px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .phone-container {
+            width: 100%;
+            max-width: 410px;
+            background: var(--card-bg);
+            border-radius: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            border: 8px solid #222;
+            margin-bottom: 40px;
+        }
+
+        /* Barra de Navegação Superior do App */
+        .app-header {
+            background: linear-gradient(135deg, #00b050, #008f3e);
+            color: white;
+            padding: 24px 16px 20px;
+            border-bottom-left-radius: 24px;
+            border-bottom-right-radius: 24px;
+        }
+
+        .app-header h1 {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .app-header p {
+            font-size: 13px;
+            opacity: 0.9;
+        }
+
+        /* Abas de Navegação interna */
+        .tabs {
+            display: flex;
+            justify-content: space-around;
+            background: #fff;
+            padding: 12px 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            font-size: 14px;
+            font-weight: 600;
+            color: #666;
+            cursor: pointer;
+            padding: 6px 16px;
+            border-radius: 20px;
+            transition: all 0.3s;
+        }
+
+        .tab-btn.active {
+            background: rgba(0, 176, 80, 0.1);
+            color: var(--primary-color);
+        }
+
+        /* Telas */
+        .screen {
+            display: none;
+            padding: 16px;
+            flex-direction: column;
+            overflow-y: auto;
+            max-height: 650px;
+        }
+
+        .screen.active {
+            display: flex;
+        }
+
+        /* Formulários (Tela de Registro) */
+        .logo-area {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .logo-icon {
+            font-size: 32px;
+            color: var(--primary-color);
+            font-weight: 900;
+            border: 3px solid var(--primary-color);
+            display: inline-block;
+            width: 60px;
+            height: 60px;
+            line-height: 54px;
+            border-radius: 14px;
+            margin-bottom: 10px;
+        }
+        .register-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+
+        .input-wrapper {
+            display: flex;
+            align-items: center;
+            background: #f1f3f4;
+            border-radius: 10px;
+            padding: 10px 14px;
+            border: 1px solid transparent;
+        }
+
+        .input-wrapper:focus-within {
+            border-color: var(--primary-color);
+            background: #fff;
+        }
+
+        .input-wrapper span.flag {
+            margin-right: 8px;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-wrapper input {
+            border: none;
+            background: transparent;
+            width: 100%;
+            outline: none;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .captcha-container {
+            display: flex;
+            gap: 10px;
+        }
+        .captcha-img {
+            background: #ffebee;
+            color: #e53935;
+            font-weight: bold;
+            font-style: italic;
+            letter-spacing: 4px;
+            padding: 0 15px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            user-select: none;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            margin: 15px 0;
+            color: #555;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.2s;
+            text-align: center;
+        }
+
+        .btn-primary:hover {
+            background: #008f3e;
+        }
+
+        /* Lista de Frotas / Veículos */
+        .city-chips {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+        }
+
+        .chip {
+            background: #fff;
+            border: 1px solid #ddd;
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .chip.active {
+            border-color: var(--primary-color);
+            background: rgba(0, 176, 80, 0.05);
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .vehicle-card {
+            background: #fff;
+            border-radius: var(--border-radius);
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            border: 1px solid #f0f0f0;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .vehicle-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .vehicle-title {
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        .status-badge {
+            background: rgba(0, 176, 80, 0.1);
+            color: var(--primary-color);
+            font-size: 11px;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+
+        .vehicle-info-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .profit-highlight {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .vehicle-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 6px;
+            padding-top: 10px;
+            border-top: 1px solid #f5f5f5;
+        }
+
+        .price-tag {
+            font-size: 18px;
+            font-weight: 800;
+            color: #222;
+        }
+
+        .btn-rent {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* Área de Pagamento */
+        .payment-box {
+            background: #fff;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        .payment-summary {
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            font-size: 14px;
+        }
+
+        .pix-code-box {
+            background: #f1f3f4;
+            padding: 12px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 12px;
+            word-break: break-all;
+            margin: 10px 0;
+            border: 1px dashed #ccc;
+        }
+
+        /* Bottom Navigation Bar */
+        .bottom-nav {
+            display: flex;
+            justify-content: space-around;
+            background: #fff;
+            border-top: 1px solid #eee;
+            padding: 10px 0;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 11px;
+            color: #888;
+            cursor: pointer;
+            background: none;
+            border: none;
+            gap: 2px;
+        }
+
+        .nav-item.active {
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+
+        .nav-item svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="phone-container">
+        
+        <!-- Cabeçalho Dinâmico -->
+        <div class="app-header" id="appHeader">
+            <h1>WaymoTaxi</h1>
+            <p>Plataforma de Investimento e Frotas Autónomas</p>
+        </div>
+
+        <!-- Abas Superiores Alternativas para teste rápido -->
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchScreen('registro')">Cadastro</button>
+            <button class="tab-btn" onclick="switchScreen('frotas')">Frotas</button>
+            <button class="tab-btn" onclick="switchScreen('pagamento')">Pagamento</button>
+        </div>
+
+        <!-- TELA 1: REGISTRO / CADASTRO -->
+        <div id="screen-registro" class="screen active">
+            <div class="logo-area">
+                <div class="logo-icon">W</div>
+                <div class="register-title">Registrar</div>
+            </div>
+
+            <div class="form-group">
+                <label>Celular</label>
+                <div class="input-wrapper">
+                    <span class="flag">🇧🇷 +55</span>
+                    <input type="tel" id="reg-phone" placeholder="Por favor, insira seu número de celular">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Senha</label>
+                <div class="input-wrapper">
+                    <input type="password" id="reg-pass" placeholder="Por favor, insira a senha (mínimo 6 dígitos)">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Confirmar senha</label>
+                <div class="input-wrapper">
+                    <input type="password" id="reg-pass-confirm" placeholder="Por favor, insira a senha novamente">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Código de verificação</label>
+                <div class="captcha-container">
+                    <div class="input-wrapper" style="flex: 1;">
+                        <input type="text" id="reg-captcha" placeholder="Código">
+                    </div>
+                    <div class="captcha-img" id="captcha-val">6656</div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Código de convite</label>
+                <div class="input-wrapper">
+                    <input type="text" id="reg-invite" value="R32KB5">
+                </div>
+            </div>
+
+            <div class="checkbox-group">
+                <input type="checkbox" id="terms" checked>
+                <label for="terms">Eu li e concordo com a <a href="#" style="color:var(--primary-color);">Política de Privacidade</a></label>
+            </div>
+
+            <button class="btn-primary" onclick="processRegister()">Registrar</button>
+        </div>
+
+        <!-- TELA 2: FROTAS DISPONÍVEIS -->
+        <div id="screen-frotas" class="screen">
+            <h2 style="font-size: 16px; margin-bottom: 12px;">Frota disponível</h2>
+            
+            <div class="city-chips">
+                <div class="chip active">🇺🇸 Las vegas <span style="font-size:11px; opacity:0.6;">• 10 veíc.</span></div>
+                <div class="chip">🇺🇸 Dallas <span style="font-size:11px; opacity:0.6;">• 7 veíc.</span></div>
+                <div class="chip">🇺🇸 Nashville <span style="font-size:11px; opacity:0.6;">• 6 veíc.</span></div>
+            </div>
+
+            <!-- Veículo 1 -->
+            <div class="vehicle-card">
+                <div class="vehicle-header">
+                    <span class="vehicle-title">V-VEGAS-001</span>
+                    <span class="status-badge">⚡ Em operação</span>
+                </div>
+                <div class="vehicle-info-row">
+                    <span>Lucro Esperado:</span>
+                    <span class="profit-highlight">R$ 160,00</span>
+                </div>
+                <div class="vehicle-info-row">
+                    <span>Ciclo:</span>
+                    <span>21 dias</span>
+                </div>
+                <div class="vehicle-info-row">
+                    <span>Diariamente:</span>
+                    <span style="color:#00b050;">R$ 8,89</span>
+                </div>
+                <div class="vehicle-footer">
+                    <span class="price-tag">R$ 80</span>
+                    <button class="btn-rent" onclick="openPayment('V-VEGAS-001', 80)">Alugar</button>
+                </div>
+            </div>
+
+            <!-- Veículo 2 -->
+            <div class="vehicle-card">
+                <div class="vehicle-header">
+                    <span class="vehicle-title">V-VEGAS-002</span>
+                    <span class="status-badge">⚡ Em operação</span>
+                </div>
+                <div class="vehicle-info-row">
+                    <span>Lucro Esperado:</span>
+                    <span class="profit-highlight">R$ 210,00</span>
+                </div>
+                <div class="vehicle-info-row">
+                    <span>Ciclo:</span>
+                    <span>21 dias</span>
+                </div>
+                <div class="vehicle-info-row">
+                    <span>Diariamente:</span>
+                    <span style="color:#00b050;">R$ 11,67</span>
+                </div>
+                <div class="vehicle-footer">
+                    <span class="price-tag">R$ 105</span>
+                    <button class="btn-rent" onclick="openPayment('V-VEGAS-002', 105)">Alugar</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- TELA 3: ÁREA DE PAGAMENTO -->
+        <div id="screen-pagamento" class="screen">
+            <h2 style="font-size: 18px; margin-bottom: 12px;">Finalizar Aluguel</h2>
+            
+            <div class="payment-box">
+                <div class="payment-summary">
+                    <p><strong>Item:</strong> <span id="pay-item">Nenhum selecionado</span></p>
+                    <p><strong>Valor:</strong> <span id="pay-value">R$ 0,00</span></p>
+                </div>
+
+                <label style="font-size: 13px; font-weight: 600; color: #444; display:block; margin-bottom:8px;">Forma de Pagamento:</label>
+                <div class="input-wrapper" style="margin-bottom: 16px; background: #e8f5e9; border: 1px solid var(--primary-color);">
+                    <span style="font-weight: bold; color: var(--primary-color); margin-right: 8px;">PIX</span>
+                    <span style="font-size:13px; color:#555;">Aprovação imediata</span>
+                </div>
+
+                <p style="font-size: 12px; color: #666; margin-bottom: 8px;">Copia e Cole Pix gerado:</p>
+                <div class="pix-code-box" id="pix-code">
+                    000201012212260014br.gov.bcb.pix2543waymotaxitransferprod055392026105000005303986540580.005802BR5924WaymoTaxiLtda6009SaoPaulo62070503***6304E21A
+                </div>
+
+                <button class="btn-primary" style="margin-top: 10px;" onclick="simulatePaymentSuccess()">Confirmar Pagamento Simulado</button>
+            </div>
+        </div>
+
+        <!-- Barra de Navegação Inferior -->
+        <div class="bottom-nav">
+            <button class="nav-item active" onclick="switchScreen('registro')">
+                <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+                Lar
+            </button>
+            <button class="nav-item" onclick="switchScreen('frotas')">
+                <svg viewBox="0 0 24 24"><path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.22.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
+                Frotas
+            </button>
+            <button class="nav-item" onclick="switchScreen('pagamento')">
+                <svg viewBox="0 0 24 24"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
+                Recursos
+            </button>
+        </div>
+
+    </div>
+
+    <script>
+        // Função simples em JavaScript para alternar entre as telas do App simulado
+        function switchScreen(screenId) {
+            // Remove active de todas as telas
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            // Remove active das abas e itens de nav inferior
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+
+            // Ativa a tela escolhida
+            document.getElementById('screen-' + screenId).classList.add('active');
+
+            // Atualiza botões visuais correspondentes
+            if(screenId === 'registro') {
+                document.querySelectorAll('.tab-btn')[0].classList.add('active');
+                document.querySelectorAll('.nav-item')[0].classList.add('active');
+            } else if(screenId === 'frotas') {
+                document.querySelectorAll('.tab-btn')[1].classList.add('active');
+                document.querySelectorAll('.nav-item')[1].classList.add('active');
+            } else if(screenId === 'pagamento') {
+                document.querySelectorAll('.tab-btn')[2].classList.add('active');
+                document.querySelectorAll('.nav-item')[2].classList.add('active');
+            }
+        }
+
+        // Simulação do Registro
+        function processRegister() {
+            const phone = document.getElementById('reg-phone').value;
+            const pass = document.getElementById('reg-pass').value;
+            const confirm = document.getElementById('reg-pass-confirm').value;
+
+            if(!phone || !pass) {
+                alert('Por favor, preencha o número de celular e a senha!');
+                return;
+            }
+            if(pass !== confirm) {
+                alert('As senhas digitadas não coincidem!');
+                return;
+            }
+
+            alert('Cadastro efetuado com sucesso! Redirecionando para a área de frotas.');
+            switchScreen('frotas');
+        }
+
+        // Abrir pagamento de um veículo específico
+        function openPayment(vehicleName, price) {
+            document.getElementById('pay-item').innerText = vehicleName;
+            document.getElementById('pay-value').innerText = 'R$ ' + price + ',00';
+            switchScreen('pagamento');
+        }
+
+        function simulatePaymentSuccess() {
+            alert('Pagamento simulado recebido com sucesso! Sua frota começará a render em instantes.');
+            switchScreen('frotas');
+        }
+    </script>
+</body>
+</html>
